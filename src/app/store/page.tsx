@@ -32,14 +32,14 @@ export default async function StorePage() {
   return (
     <main className="min-h-screen bg-[#070c1b] text-slate-100">
       <header className="sticky top-0 z-50 border-b border-white/[0.06] bg-[#070c1b]/95 backdrop-blur-xl">
-        <div className="mx-auto flex h-[64px] max-w-[1120px] items-center px-4">
+        <div className="mx-auto flex h-[64px] max-w-[760px] items-center px-4">
           <Link href="/" className="flex items-center gap-2.5" aria-label="Nova Store">
             <span className="grid h-8 w-8 place-items-center rounded-full border border-cyan-300/40 bg-cyan-400/10 text-xs font-black text-cyan-300">
               NS
             </span>
             <span className="text-[15px] font-bold tracking-wide text-white">NOVA STORE</span>
           </Link>
-          <nav className="ml-auto hidden items-center gap-1.5 text-[12px] font-medium text-slate-300 lg:flex">
+          <nav className="ml-auto hidden items-center gap-1.5 text-[11px] font-medium text-slate-300 xl:flex">
             <Link href="/" className="rounded-md px-3 py-2 transition hover:bg-white/[0.05]">หน้าแรก</Link>
             <Link href="/store" className="rounded-md bg-cyan-400/10 px-3 py-2 text-cyan-300">ร้านค้า</Link>
             <Link href="/#promotion" className="rounded-md px-3 py-2 transition hover:bg-white/[0.05]">โปรโมชั่น</Link>

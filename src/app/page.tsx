@@ -30,15 +30,15 @@ async function loadProducts(): Promise<CatalogProduct[]> {
 function Header() {
   return (
     <header className="sticky top-0 z-50 border-b border-white/[0.06] bg-[#070c1b]/95 backdrop-blur-xl">
-      <div className="mx-auto flex h-[64px] max-w-[1120px] items-center px-4 sm:px-6">
+      <div className="mx-auto flex h-[64px] max-w-[760px] items-center px-4">
         <Link href="/" className="flex items-center gap-2.5" aria-label="Nova Store">
           <span className="relative grid h-8 w-8 place-items-center rounded-full border border-cyan-300/45 bg-gradient-to-br from-cyan-300/20 to-blue-600/20 text-xs font-black text-cyan-100 shadow-[0_0_18px_rgba(34,211,238,.12)]">
             N
           </span>
-          <span className="text-[15px] font-black tracking-[.12em] text-white">NOVA STORE</span>
+          <span className="whitespace-nowrap text-[13px] font-black tracking-[.08em] text-white">NOVA STORE</span>
         </Link>
 
-        <nav className="ml-auto hidden items-center gap-1.5 text-[12px] font-medium text-slate-300 lg:flex">
+        <nav className="ml-auto hidden items-center gap-1.5 text-[11px] font-medium text-slate-300 xl:flex">
           <Link href="/" className="rounded-md px-3 py-2 text-slate-100 transition hover:bg-white/[0.05]"><span className="mr-1.5 text-slate-500">⌂</span>หน้าแรก</Link>
           <Link href="/store" className="rounded-md px-3 py-2 transition hover:bg-white/[0.05] hover:text-white"><span className="mr-1.5 text-slate-500">▦</span>ร้านค้า</Link>
           <Link href="#promotion" className="rounded-md px-3 py-2 transition hover:bg-white/[0.05] hover:text-white"><span className="mr-1.5 text-slate-500">◆</span>โปรโมชั่น</Link>
