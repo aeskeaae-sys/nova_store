@@ -55,14 +55,14 @@ export default function ProductCatalog({
           value={search}
           onChange={(event) => setSearch(event.target.value)}
           placeholder="ค้นหาสินค้า"
-          className="rounded-lg border border-zinc-700 bg-zinc-900 px-3 py-2 text-sm"
+          className="rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm text-slate-900 outline-none placeholder:text-slate-400 focus:border-[#d44242]"
           aria-label="ค้นหาสินค้า"
         />
-        <select value={category} onChange={(event) => setCategory(event.target.value)} className="rounded-lg border border-zinc-700 bg-zinc-900 px-3 py-2 text-sm" aria-label="Filter by category">
+        <select value={category} onChange={(event) => setCategory(event.target.value)} className="rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm text-slate-700" aria-label="Filter by category">
           <option value="all">หมวดหมู่ทั้งหมด</option>
           {categories.map((entry) => <option key={entry} value={entry}>{entry}</option>)}
         </select>
-        <select value={sort} onChange={(event) => setSort(event.target.value)} className="rounded-lg border border-zinc-700 bg-zinc-900 px-3 py-2 text-sm" aria-label="Sort products">
+        <select value={sort} onChange={(event) => setSort(event.target.value)} className="rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm text-slate-700" aria-label="Sort products">
           <option value="name">เรียงตามชื่อ</option>
           <option value="price-asc">ราคา: ต่ำ - สูง</option>
           <option value="price-desc">ราคา: สูง - ต่ำ</option>
@@ -70,27 +70,33 @@ export default function ProductCatalog({
       </div>}
 
       {visible.length === 0 ? (
-        <p className="rounded-xl border border-zinc-800 bg-zinc-900 p-6 text-zinc-400">ไม่พบสินค้าที่ตรงกับตัวกรอง</p>
+        <p className="rounded-2xl border border-slate-200 bg-white p-6 text-slate-400">ไม่พบสินค้าที่ตรงกับตัวกรอง</p>
       ) : (
         <div className={compact ? "grid grid-cols-2 gap-2 sm:grid-cols-3" : "grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-4"}>
           {visible.map((product) => (
-            <article key={product.type_id} className="overflow-hidden rounded-[3px] border border-white/[0.07] bg-[#0b1124]">
-              <div className="relative aspect-[4/3] bg-[#10182c]">
+            <article key={product.type_id} className="group flex flex-col overflow-hidden rounded-3xl border border-slate-200/70 bg-white shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:border-[#d44242]/40 hover:shadow-xl">
+              <div className="relative aspect-square overflow-hidden bg-slate-100">
                 {product.image_url ? (
-                  <Image src={product.image_url} alt={product.name} fill unoptimized sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw" className="object-cover" />
-                ) : <div className="flex h-full items-center justify-center text-sm text-zinc-500">No image</div>}
+                  <Image src={product.image_url} alt={product.name} fill unoptimized sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw" className="object-contain p-5 transition-transform duration-500 group-hover:scale-105" />
+                ) : (
+                  <div className="flex h-full items-center justify-center text-sm text-slate-400">ไม่มีรูปสินค้า</div>
+                )}
+                {product.stock === 0 && (
+                  <div className="absolute inset-0 flex items-center justify-center bg-white/75">
+                    <span className="text-xs font-bold tracking-widest text-slate-500">สินค้าหมด</span>
+                  </div>
+                )}
               </div>
-              <div className="space-y-2 p-3">
-                <div className="flex items-start justify-between gap-3">
-                  <h2 className="text-[11px] font-bold leading-tight text-slate-100">{product.name}</h2>
-                  <span className="shrink-0 rounded px-1.5 py-0.5 text-[8px] text-cyan-300 bg-cyan-400/10">{product.category}</span>
+              <div className="flex flex-1 flex-col p-4">
+                <p className="mb-1 text-[9px] font-bold uppercase tracking-widest text-[#d44242]">{product.category}</p>
+                <h2 className="mb-3 min-h-[2.5rem] line-clamp-2 text-sm font-bold text-slate-900 transition group-hover:text-[#d44242]">{product.name}</h2>
+                <div className="mt-auto flex items-center justify-between gap-2">
+                  <span className="text-xl font-extrabold text-[#d44242]">฿{product.price_vip.toLocaleString("th-TH")}</span>
+                  <span className={`rounded-full px-2 py-0.5 text-[10px] font-semibold ${product.stock > 0 ? "bg-emerald-50 text-emerald-600" : "bg-slate-100 text-slate-400"}`}>
+                    {product.stock > 0 ? `เหลือ ${product.stock}` : "หมดแล้ว"}
+                  </span>
                 </div>
-                <div className="flex items-center justify-between text-[11px]">
-                  <span className="font-bold text-slate-100">฿{product.price.toLocaleString("th-TH")}</span>
-                  <span className="text-[9px] text-slate-500">VIP ฿{product.price_vip.toLocaleString("th-TH")}</span>
-                </div>
-                <p className="text-xs text-zinc-400">Stock: {product.stock}</p>
-                {product.details && <p className="line-clamp-4 whitespace-pre-line text-sm text-zinc-400">{product.details}</p>}
+                {product.details && <p className="mt-3 line-clamp-2 text-xs leading-relaxed text-slate-500">{product.details}</p>}
               </div>
             </article>
           ))}

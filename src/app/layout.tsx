@@ -13,8 +13,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Nova Store | ร้านค้าเกมและบริการดิจิทัล",
-  description: "ร้านค้าเกมและบริการดิจิทัล Nova Store",
+  title: "NovaStore | ร้านค้าสินค้าดิจิทัล",
+  description: "NovaStore ร้านค้าสินค้าดิจิทัล เชื่อมข้อมูล GAFIW API",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {

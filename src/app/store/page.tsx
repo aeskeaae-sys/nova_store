@@ -30,69 +30,56 @@ export default async function StorePage() {
   const categories = [...new Set(products.map((product) => product.category))];
 
   return (
-    <main className="min-h-screen bg-[#070c1b] text-slate-100">
-      <header className="sticky top-0 z-50 border-b border-white/[0.06] bg-[#070c1b]/95 backdrop-blur-xl">
-        <div className="mx-auto flex h-[64px] max-w-[760px] items-center px-4">
-          <Link href="/" className="flex items-center gap-2.5" aria-label="Nova Store">
-            <span className="grid h-8 w-8 place-items-center rounded-full border border-cyan-300/40 bg-cyan-400/10 text-xs font-black text-cyan-300">
-              NS
-            </span>
-            <span className="text-[15px] font-bold tracking-wide text-white">NOVA STORE</span>
+    <main className="min-h-screen bg-slate-50 text-slate-700">
+      <header className="sticky top-0 z-50 border-b border-slate-200/70 bg-white/90 backdrop-blur-xl">
+        <div className="mx-auto flex h-14 max-w-6xl items-center justify-between px-4">
+          <Link href="/" className="text-lg font-extrabold text-slate-900">
+            Nova<span className="text-[#d44242]">Store</span>
           </Link>
-          <nav className="ml-auto hidden items-center gap-1.5 text-[11px] font-medium text-slate-300 xl:flex">
-            <Link href="/" className="rounded-md px-3 py-2 transition hover:bg-white/[0.05]">หน้าแรก</Link>
-            <Link href="/store" className="rounded-md bg-cyan-400/10 px-3 py-2 text-cyan-300">ร้านค้า</Link>
-            <Link href="/#promotion" className="rounded-md px-3 py-2 transition hover:bg-white/[0.05]">โปรโมชั่น</Link>
-            <Link href="/#history" className="rounded-md px-3 py-2 transition hover:bg-white/[0.05]">ประวัติ</Link>
+          <nav className="hidden items-center gap-5 text-sm font-medium sm:flex">
+            <Link href="/" className="hover:text-[#d44242]">หน้าแรก</Link>
+            <Link href="/store" className="rounded-lg bg-[#FCE9E9] px-3 py-1.5 text-xs font-bold text-[#d44242]">สินค้า</Link>
+            <Link href="/admin/gafiw" className="hover:text-[#d44242]">Admin</Link>
           </nav>
-          <Link href="/admin/gafiw" className="ml-3 rounded-md bg-blue-600 px-3.5 py-2 text-[12px] font-semibold text-white transition hover:bg-blue-500">
-            ผู้ดูแลระบบ
-          </Link>
         </div>
       </header>
 
-      <section className="site-grid min-h-[calc(100vh-64px)] pb-12">
-        <div className="mx-auto max-w-[760px] px-4 pt-8 sm:px-6">
-          <h1 className="text-[20px] font-bold text-white">สินค้าทั้งหมด</h1>
-
-          {categories.length > 0 && (
-            <div className="mt-5 grid grid-cols-2 gap-2 sm:grid-cols-4">
-              {["ทั้งหมด", ...categories.slice(0, 3)].map((category, index) => (
-                <div
-                  key={`${category}-${index}`}
-                  className={index === 0
-                    ? "rounded-[3px] border border-blue-500/80 bg-blue-500/[0.07] px-3 py-3"
-                    : "rounded-[3px] border border-white/[0.07] bg-[#0b1124]/85 px-3 py-3"}
-                >
-                  <p className="text-[11px] font-bold text-slate-200">{category}</p>
-                  <p className="mt-1 text-[9px] text-slate-500">{index === 0 ? `${products.length} รายการ` : "ดูรายการสินค้า"}</p>
-                </div>
-              ))}
-            </div>
-          )}
-
-          <div className="mt-6">
-            <div className="mb-3 flex items-center justify-between">
-              <h2 className="text-[12px] font-bold text-slate-100">หมวดหมู่สินค้า</h2>
-              <span className="text-[9px] text-slate-500">{products.length} รายการ</span>
-            </div>
-
-            {products.length > 0 ? (
-              <ProductCatalog products={products} />
-            ) : (
-              <div className="rounded-[3px] border border-white/[0.07] bg-[#0b1124]/85 p-8 text-center">
-                <p className="text-[12px] text-slate-300">ยังไม่มีข้อมูลสินค้าถูกซิงก์</p>
-                <Link href="/admin/gafiw" className="mt-4 inline-block rounded-md bg-blue-600 px-4 py-2 text-[11px] font-bold text-white">
-                  เปิดหน้าจัดการ
-                </Link>
-              </div>
-            )}
-          </div>
+      <section className="mx-auto max-w-6xl px-4 py-10">
+        <div className="mb-8 text-center">
+          <h1 className="text-4xl font-extrabold text-slate-900">
+            Nova<span className="text-[#d44242]">Store</span>
+          </h1>
+          <p className="mt-2 text-sm text-slate-500">สินค้าดิจิทัลจาก GAFIW API</p>
         </div>
+
+        {categories.length > 0 && (
+          <div className="mb-7 flex flex-wrap gap-2">
+            {categories.map((category) => (
+              <span
+                key={category}
+                className="rounded-xl border border-slate-200 bg-white px-4 py-1.5 text-xs font-bold text-slate-600"
+              >
+                {category}
+              </span>
+            ))}
+          </div>
+        )}
+
+        {products.length > 0 ? (
+          <ProductCatalog products={products} />
+        ) : (
+          <div className="rounded-3xl border border-slate-200 bg-white px-6 py-20 text-center">
+            <p className="text-lg font-semibold text-slate-600">ไม่พบสินค้า</p>
+            <p className="mt-2 text-sm text-slate-400">ซิงก์ข้อมูลจากหน้า GAFIW Admin เพื่อแสดงรายการสินค้า</p>
+            <Link href="/admin/gafiw" className="mt-5 inline-block rounded-xl bg-[#d44242] px-5 py-2.5 text-sm font-bold text-white">
+              เปิด GAFIW Admin
+            </Link>
+          </div>
+        )}
       </section>
 
-      <footer className="border-t border-white/[0.05] bg-[#070c1b] px-4 py-5 text-center text-[9px] text-slate-600">
-        © 2026 NOVA STORE — ระบบสินค้า GAFIW
+      <footer className="bg-slate-900 px-4 py-8 text-center text-xs text-slate-500">
+        © 2026 NovaStore
       </footer>
     </main>
   );

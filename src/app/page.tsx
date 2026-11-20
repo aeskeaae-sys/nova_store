@@ -9,7 +9,8 @@ async function loadProducts(): Promise<CatalogProduct[]> {
     const result = await getPool().query(
       `SELECT type_id, name, image_url, price, price_vip, stock, category, details
        FROM gafiw_products
-       ORDER BY synced_at DESC, name
+       WHERE stock >= 0
+       ORDER BY stock DESC, name
        LIMIT 24`,
     );
     return result.rows.map((row) => ({
@@ -27,140 +28,175 @@ async function loadProducts(): Promise<CatalogProduct[]> {
   }
 }
 
-function Header() {
+function Navbar() {
   return (
-    <header className="sticky top-0 z-50 border-b border-white/[0.06] bg-[#070c1b]/95 backdrop-blur-xl">
-      <div className="mx-auto flex h-[64px] max-w-[760px] items-center px-4">
-        <Link href="/" className="flex items-center gap-2.5" aria-label="Nova Store">
-          <span className="relative grid h-8 w-8 place-items-center rounded-full border border-cyan-300/45 bg-gradient-to-br from-cyan-300/20 to-blue-600/20 text-xs font-black text-cyan-100 shadow-[0_0_18px_rgba(34,211,238,.12)]">
-            N
-          </span>
-          <span className="whitespace-nowrap text-[13px] font-black tracking-[.08em] text-white">NOVA STORE</span>
+    <header className="sticky top-0 z-50 border-b border-slate-200/70 bg-white/90 backdrop-blur-xl">
+      <div className="mx-auto flex h-14 max-w-6xl items-center justify-between gap-3 px-4">
+        <Link href="/" className="flex-shrink-0 text-lg font-extrabold tracking-tight text-slate-900">
+          Nova<span className="text-[#d44242]">Store</span>
         </Link>
-
-        <nav className="ml-auto hidden items-center gap-1.5 text-[11px] font-medium text-slate-300 xl:flex">
-          <Link href="/" className="rounded-md px-3 py-2 text-slate-100 transition hover:bg-white/[0.05]"><span className="mr-1.5 text-slate-500">⌂</span>หน้าแรก</Link>
-          <Link href="/store" className="rounded-md px-3 py-2 transition hover:bg-white/[0.05] hover:text-white"><span className="mr-1.5 text-slate-500">▦</span>ร้านค้า</Link>
-          <Link href="#promotion" className="rounded-md px-3 py-2 transition hover:bg-white/[0.05] hover:text-white"><span className="mr-1.5 text-slate-500">◆</span>โปรโมชั่น</Link>
-          <Link href="#catalog" className="rounded-md px-3 py-2 transition hover:bg-white/[0.05] hover:text-white"><span className="mr-1.5 text-slate-500">▣</span>สินค้า</Link>
-          <Link href="/store" className="ml-1 flex items-center gap-1.5 rounded-full border border-cyan-400/35 bg-cyan-400/[0.08] px-3 py-2 text-cyan-300 transition hover:border-cyan-300/60">
-            <span>⌕</span> ค้นหา
+        <nav className="hidden items-center gap-5 text-sm font-medium text-slate-600 sm:flex">
+          <Link href="/" className="rounded-lg bg-[#FCE9E9] px-3 py-1.5 text-xs font-bold text-[#d44242] transition hover:bg-[#d44242] hover:text-white">
+            หน้าแรก
           </Link>
+          <Link href="/store" className="transition-colors hover:text-[#d44242]">สินค้า</Link>
+          <Link href="#how-it-works" className="transition-colors hover:text-[#d44242]">วิธีใช้งาน</Link>
+          <Link href="/admin/gafiw" className="transition-colors hover:text-[#d44242]">Admin</Link>
         </nav>
-
-        <div className="ml-3 flex items-center gap-2">
-          <button type="button" className="hidden h-8 w-8 items-center justify-center rounded-md text-slate-400 hover:bg-white/[0.05] sm:flex" aria-label="สลับภาษา">TH</button>
-          <Link href="/admin/gafiw" className="rounded-md bg-blue-600 px-3.5 py-2 text-[12px] font-semibold text-white shadow-lg shadow-blue-950/30 transition hover:bg-blue-500">
-            ผู้ดูแลระบบ
-          </Link>
-        </div>
+        <Link href="/store" className="rounded-lg bg-[#d44242] px-4 py-2 text-xs font-bold text-white transition hover:bg-[#E87A7A]">
+          เลือกสินค้า
+        </Link>
       </div>
     </header>
   );
 }
 
+function Footer() {
+  return (
+    <footer className="mt-16 bg-slate-900 text-slate-400">
+      <div className="mx-auto max-w-6xl px-4 py-12">
+        <div className="grid gap-8 md:grid-cols-3">
+          <div>
+            <Link href="/" className="text-xl font-extrabold text-white">
+              Nova<span className="text-[#d44242]">Store</span>
+            </Link>
+            <p className="mt-3 max-w-xs text-sm leading-relaxed">
+              ร้านค้าสินค้าดิจิทัล เชื่อมข้อมูลจริงจาก GAFIW Shop
+            </p>
+          </div>
+          <div>
+            <h2 className="text-sm font-semibold uppercase tracking-wide text-white">ลิงก์สำคัญ</h2>
+            <div className="mt-3 flex flex-col gap-2 text-sm">
+              <Link href="/store" className="hover:text-[#d44242]">สินค้าทั้งหมด</Link>
+              <Link href="/admin/gafiw" className="hover:text-[#d44242]">GAFIW Admin</Link>
+              <Link href="/admin/xnearby" className="hover:text-[#d44242]">xNearby Admin</Link>
+            </div>
+          </div>
+          <div>
+            <h2 className="text-sm font-semibold uppercase tracking-wide text-white">ระบบ</h2>
+            <p className="mt-3 text-sm leading-relaxed">Catalog Sync · API Logs · Claim Management</p>
+          </div>
+        </div>
+        <div className="mt-10 border-t border-white/10 pt-5 text-xs text-slate-500">
+          © 2026 Nova Store
+        </div>
+      </div>
+    </footer>
+  );
+}
+
 export default async function Home() {
   const products = await loadProducts();
-  const categories = [...new Set(products.map((product) => product.category))].slice(0, 4);
+  const categories = [...new Set(products.map((product) => product.category))].slice(0, 12);
 
   return (
-    <main className="min-h-screen bg-[#070c1b] text-slate-100">
-      <Header />
-
-      <section className="site-grid relative min-h-[calc(100vh-64px)] pb-10">
-        <div className="mx-auto max-w-[760px] px-4 pt-6 sm:px-6">
-          <div className="mx-auto mb-5 text-center">
-            <div className="mb-2 inline-flex items-center gap-1.5 rounded-full border border-cyan-400/15 bg-cyan-400/[0.07] px-3 py-1 text-[10px] font-bold text-cyan-300">
-              <span className="h-1.5 w-1.5 rounded-full bg-cyan-400" />
-              NOVA STORE
-            </div>
-            <h1 className="text-[18px] font-bold text-white">ยินดีต้อนรับสู่ร้านเรา</h1>
-            <p className="mt-1 text-[10px] text-slate-400">แหล่งรวมบริการดิจิทัลสำหรับคุณ</p>
+    <>
+      <Navbar />
+      <main>
+        <section className="relative flex min-h-[72vh] items-center overflow-hidden border-b border-slate-100 bg-white">
+          <div className="pointer-events-none absolute inset-0">
+            <div className="absolute left-1/4 top-0 h-96 w-96 rounded-full bg-[#d44242]/10 blur-3xl" />
+            <div className="absolute bottom-0 right-1/4 h-96 w-96 rounded-full bg-[#d44242]/5 blur-3xl" />
+            <div className="absolute left-0 top-1/2 h-64 w-64 rounded-full bg-blue-600/5 blur-3xl" />
           </div>
-
-          <div className="hero-banner relative mb-5 overflow-hidden rounded-[4px] border border-cyan-300/[0.12] shadow-[0_18px_55px_rgba(20,95,190,.16)]">
-            <div className="absolute -right-16 top-1/2 h-56 w-56 -translate-y-1/2 rotate-12 rounded-[38px] border border-white/[0.08] bg-white/[0.035] shadow-[0_0_70px_rgba(103,232,249,.08)]" />
-            <div className="absolute -right-3 top-1/2 h-44 w-44 -translate-y-1/2 -rotate-12 rounded-[28px] border border-cyan-200/10 bg-cyan-300/[0.035]" />
-            <div className="relative flex min-h-[210px] items-center px-7 py-8 sm:px-12">
-              <div className="relative z-10">
-                <p className="text-[10px] font-bold uppercase tracking-[.22em] text-cyan-200/80">GAFIW DIGITAL MARKET</p>
-                <h2 className="mt-2 text-[22px] font-black leading-[1.12] text-white sm:text-[34px]">
-                  สินค้าออนไลน์คุณภาพ
-                  <span className="block text-cyan-100">พร้อมข้อมูลล่าสุด</span>
-                </h2>
-                <div className="mt-5 flex gap-2">
-                  <Link href="#catalog" className="rounded-md bg-white/90 px-4 py-2 text-[11px] font-bold text-blue-950 transition hover:bg-white">
-                    เลือกดูสินค้า
-                  </Link>
-                  <Link href="/store" className="rounded-md border border-white/25 px-4 py-2 text-[11px] font-bold text-white transition hover:bg-white/10">
-                    ดูร้านค้า →
-                  </Link>
-                </div>
+          <div className="relative mx-auto w-full max-w-6xl px-4 py-16">
+            <div className="mx-auto max-w-3xl text-center">
+              <div className="mb-7 inline-flex items-center gap-2 rounded-full border border-[#d44242]/30 bg-[#d44242]/10 px-4 py-2 text-xs font-bold text-[#d44242]">
+                <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-[#d44242]" />
+                GAFIW Catalog
+              </div>
+              <h1 className="text-4xl font-extrabold leading-tight tracking-tight text-slate-900 md:text-6xl">
+                สินค้าดิจิทัล
+                <br />
+                <span className="text-[#d44242]">ราคาเหมาะสม</span>
+                <br />
+                ดูข้อมูลครบก่อนเลือก
+              </h1>
+              <p className="mx-auto mb-8 mt-6 max-w-xl text-base leading-relaxed text-slate-500 md:text-lg">
+                แสดงชื่อสินค้า รูป ราคา สต็อก และหมวดหมู่จาก GAFIW Product API ที่ซิงก์เข้าระบบ
+              </p>
+              <div className="flex flex-wrap justify-center gap-3">
+                <Link href="/store" className="rounded-2xl bg-[#d44242] px-7 py-3.5 text-sm font-extrabold text-white shadow-xl shadow-[#d44242]/25 transition hover:bg-[#E87A7A]">
+                  เริ่มดูสินค้า →
+                </Link>
+                <Link href="/admin/gafiw" className="rounded-2xl border border-slate-200 bg-slate-100 px-7 py-3.5 text-sm font-bold text-slate-700 transition hover:bg-slate-200">
+                  จัดการ GAFIW
+                </Link>
               </div>
             </div>
           </div>
+        </section>
 
-          <div className="mb-7 grid grid-cols-2 gap-2 sm:grid-cols-4">
-            {[
-              ["สินค้า", String(products.length)],
-              ["หมวดหมู่", String(categories.length)],
-              ["ระบบ", "GAFIW"],
-              ["ข้อมูล", products.length ? "ซิงก์แล้ว" : "รอซิงก์"],
-            ].map(([label, value]) => (
-              <div key={label} className="rounded-[3px] border border-white/[0.055] bg-[#0b1124]/85 px-3 py-3">
-                <p className="text-[10px] text-slate-500">{label}</p>
-                <p className="mt-1 text-[15px] font-bold text-cyan-400">{value}</p>
-              </div>
-            ))}
-          </div>
-
-          <section id="promotion" className="mb-8">
-            <div className="mb-3 flex items-center justify-between">
-              <h2 className="text-[13px] font-bold text-slate-100">หมวดหมู่แนะนำ</h2>
-              <Link href="/store" className="text-[10px] text-slate-500 hover:text-cyan-300">ดูทั้งหมด →</Link>
-            </div>
-            <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
-              {categories.length ? categories.map((category) => (
+        {categories.length > 0 && (
+          <section className="overflow-hidden border-b border-slate-100 bg-white py-4">
+            <div className="marquee-row mx-auto flex w-max gap-3">
+              {[...categories, ...categories].map((category, index) => (
                 <Link
-                  key={category}
+                  key={`${category}-${index}`}
                   href="/store"
-                  className="group relative h-[118px] overflow-hidden rounded-[4px] border border-white/[0.07] bg-gradient-to-br from-[#142a47] to-[#0c1830] p-3 transition duration-200 hover:-translate-y-0.5 hover:border-cyan-400/35 hover:shadow-[0_12px_30px_rgba(14,116,190,.10)]"
+                  className="flex flex-shrink-0 items-center gap-2 rounded-2xl border border-slate-200 bg-white px-5 py-3 text-sm font-bold text-slate-700 shadow-sm"
                 >
-                  <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_20%,rgba(56,189,248,.16),transparent_35%)]" />
-                  <div className="absolute bottom-3 right-3 grid h-9 w-9 place-items-center rounded-full border border-cyan-300/10 bg-cyan-300/[0.04] text-lg text-cyan-300/60">›</div>
-                  <span className="relative block text-[11px] font-bold text-slate-200">{category}</span>
-                  <span className="relative mt-1 block text-[9px] text-slate-500">ดูรายการสินค้า</span>
+                  <span className="h-2 w-2 rounded-full bg-[#d44242]" />
+                  {category}
                 </Link>
-              )) : (
-                <div className="col-span-2 rounded-[4px] border border-dashed border-white/[0.08] bg-[#0b1124]/60 px-4 py-6 text-center sm:col-span-4">
-                  <p className="text-[11px] text-slate-400">รอซิงก์หมวดหมู่สินค้าจาก GAFIW</p>
-                </div>
-              )}
+              ))}
             </div>
           </section>
+        )}
 
-          <section id="catalog">
-            <div className="mb-3 flex items-center justify-between">
-              <h2 className="text-[13px] font-bold text-slate-100">สินค้าแนะนำ</h2>
-              <Link href="/store" className="text-[10px] text-slate-500 hover:text-cyan-300">ดูทั้งหมด →</Link>
+        <section id="how-it-works" className="bg-white py-16">
+          <div className="mx-auto max-w-5xl px-4">
+            <div className="mb-10 text-center">
+              <h2 className="text-3xl font-extrabold text-slate-900">การใช้งานระบบ</h2>
+              <p className="mt-2 text-sm text-slate-400">4 ขั้นตอนสำหรับผู้ดูแลและลูกค้า</p>
             </div>
-            {products.length ? (
-              <ProductCatalog products={products.slice(0, 6)} compact />
-            ) : (
-              <div className="rounded-[3px] border border-white/[0.07] bg-[#0b1124]/85 p-5 text-center">
-                <p className="text-[12px] text-slate-300">ยังไม่มีข้อมูลสินค้าถูกซิงก์</p>
-                <Link href="/admin/gafiw" className="mt-3 inline-block rounded-md bg-blue-600 px-4 py-2 text-[11px] font-bold text-white">
-                  เปิดหน้าจัดการ
+            <div className="grid gap-5 md:grid-cols-3">
+              {[
+                ["01", "ตั้งค่า GAFIW", "กรอก API Key ผ่านหน้า Admin และเปิดใช้งานบริการ"],
+                ["02", "ซิงก์สินค้า", "ดึงข้อมูลสินค้าจริงจาก GAFIW Product API"],
+                ["03", "ดูและค้นหา", "เลือกหมวดหมู่ ค้นหา และเรียงราคาจากหน้าร้าน"],
+              ].map(([number, title, description]) => (
+                <div key={number} className="relative rounded-3xl border border-slate-200 bg-slate-50 p-7 shadow-sm transition hover:border-[#d44242]/40">
+                  <span className="absolute right-6 top-5 text-5xl font-extrabold text-slate-200">{number}</span>
+                  <div className="mb-5 grid h-12 w-12 place-items-center rounded-2xl bg-[#d44242]/10 text-lg font-black text-[#d44242]">
+                    {number}
+                  </div>
+                  <h3 className="text-lg font-extrabold text-slate-900">{title}</h3>
+                  <p className="mt-2 text-sm leading-relaxed text-slate-500">{description}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {products.length > 0 && (
+          <section className="border-y border-slate-100 bg-slate-50 py-16">
+            <div className="mx-auto max-w-6xl px-4">
+              <div className="mb-8 flex items-end justify-between gap-3">
+                <div>
+                  <h2 className="text-3xl font-extrabold text-slate-900">สินค้าที่ซิงก์ล่าสุด</h2>
+                  <p className="mt-1 text-sm text-slate-400">ข้อมูลจากฐานข้อมูล GAFIW</p>
+                </div>
+                <Link href="/store" className="text-sm font-semibold text-[#d44242] hover:underline">
+                  ดูทั้งหมด →
                 </Link>
               </div>
-            )}
+              <ProductCatalog products={products.slice(0, 8)} compact />
+            </div>
           </section>
-        </div>
-      </section>
+        )}
 
-      <footer className="border-t border-white/[0.05] bg-[#070c1b] px-4 py-5 text-center text-[9px] text-slate-600">
-        © 2026 NOVA STORE — ระบบสินค้า GAFIW
-      </footer>
-    </main>
+        <section className="bg-slate-50 px-4 py-16">
+          <div className="mx-auto max-w-4xl overflow-hidden rounded-3xl bg-gradient-to-br from-[#d44242] to-[#9B1C1C] px-8 py-14 text-center">
+            <h2 className="text-3xl font-extrabold text-white">พร้อมเปิดใช้งานระบบหรือยัง</h2>
+            <p className="mb-7 mt-3 text-sm text-white/70">ตั้งค่า GAFIW และซิงก์รายการสินค้าเข้าระบบ</p>
+            <Link href="/admin/gafiw" className="inline-block rounded-2xl bg-white px-8 py-3 text-sm font-extrabold text-[#d44242] shadow-lg transition hover:bg-slate-50">
+              เปิด GAFIW Admin
+            </Link>
+          </div>
+        </section>
+      </main>
+      <Footer />
+    </>
   );
 }

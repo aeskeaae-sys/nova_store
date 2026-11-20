@@ -20,9 +20,18 @@
 }
 
 body {
-  background: #070c1b;
-  color: #f8fafc;
-  font-family: Arial, Helvetica, sans-serif;
+  background: #ffffff;
+  color: #334155;
+  font-family: Inter, Arial, Helvetica, sans-serif;
+}
+
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+.marquee-row {
+  animation: marquee 28s linear infinite;
 }
 
 .site-grid {
